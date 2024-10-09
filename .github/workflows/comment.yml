@@ -18,6 +18,13 @@ jobs:
         with:
           script: |
             const prNumber = context.issue.number
+            const resp = await github.rest.pulls.get({
+              owner: context.payload.repository.owner.login,
+              repo: context.payload.repository.name,
+              pull_number: prNumber
+            });
+
+            console.log(resp)
 
             console.log(`Triggering a build for pull-request ${prNumber}`)
             console.log(context)
