@@ -30,7 +30,7 @@ jobs:
               repo: context.payload.repository.name,
               workflow_id: 'ci.yml',
               ref: pr.head.ref,
-              inputs: { pr-number: context.issue.number }
+              inputs: { "pr-number": context.issue.number }
             })
 
             // Update comment indicating job has been dispatched
