@@ -5,20 +5,23 @@ on:
     types: [created]
 
 jobs:
-  trigger:
+  trigger-self:
     runs-on: ubuntu-latest
     # Only run on pull-request comments
     if: ${{ github.event.issue.pull_request && github.event.comment.body == '/build-pr-image' }}
 
     steps:
-      - uses: actions/checkout@v4
-      - id: get-ref
-        run: |
-          echo pr=${{ github.event.issue.number }} >> $GITHUB_OUTPUT
-          echo ref=ref/pulls/${{ github.event.issue.number }}/head >> $GITHUB_OUTPUT
-
-      - name: Trigger CI workflow
-        uses: ./.github/workflows/ci.yml
+      - uses: actions/github-script@v7
         with:
-          pr: ${{ steps.get-ref.outputs.pr }}
-          ref: ${{ steps.get-ref.outputs.ref }}
+          script: |
+            console.log(context)
+
+            const prNumber = context.issue.number
+            const ref = `refs/pull/${prNumber}/merge`
+
+            const response = await github.actions.createWorkflowDispatch({
+              owner: 'your-username',
+              repo: 'your-repo',
+              workflow_id: 'ci.yml',
+              ref: 'main'
+            })
