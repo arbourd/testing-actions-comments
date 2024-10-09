@@ -6,10 +6,10 @@ on:
 
 jobs:
   trigger-self:
-    runs-on: ubuntu-latest
     # Only run on pull-request comments
-    if: ${{ github.event.issue.pull_request && github.event.comment.body == '/build-pr-image' }}
+    if: ${{ github.event.issue.pull_request && startsWith(github.event.comment.body, '/build-pr-image') }}
 
+    runs-on: ubuntu-latest
     permissions:
       actions: write
 
@@ -17,10 +17,12 @@ jobs:
       - uses: actions/github-script@v7
         with:
           script: |
-            console.log(context)
-            console.log(context.payload.repository.owner)
-
             const prNumber = context.issue.number
+
+            console.log(`Triggering a build for pull-request ${prNumber}`)
+            console.log(context)
+            console.log(context.payload.issue.pull_request)
+
             const ref = `refs/pull/${prNumber}/merge`
 
             const response = await github.rest.actions.createWorkflowDispatch({
