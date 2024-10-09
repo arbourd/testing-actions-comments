@@ -11,6 +11,7 @@ jobs:
     if: ${{ github.event.issue.pull_request && github.event.comment.body == '/build-pr-image' }}
 
     steps:
+      - uses: actions/checkout@v4
       - id: get-ref
         run: |
           echo pr=${{ github.event.issue.number }} >> $GITHUB_OUTPUT

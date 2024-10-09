@@ -17,5 +17,8 @@ jobs:
 
     steps:
       - run: |
+          echo "${{ github.ref }}"
+
+      - run: |
           echo "${{ inputs.pr }}"
           echo "${{ inputs.ref }}"
