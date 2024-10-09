@@ -18,23 +18,18 @@ jobs:
         with:
           script: |
             const prNumber = context.issue.number
-            const resp = await github.rest.pulls.get({
+            const { data: pr } = await github.rest.pulls.get({
               owner: context.payload.repository.owner.login,
               repo: context.payload.repository.name,
               pull_number: prNumber
             });
+            branch = pr.head.ref
 
-            console.log(resp)
-
-            console.log(`Triggering a build for pull-request ${prNumber}`)
-            console.log(context)
-            console.log(context.payload.issue.pull_request)
-
-            const ref = `refs/pull/${prNumber}/merge`
+            console.log(`Triggering a build for pull-request ${prNumber} on branch '${branch}'`)
 
             const response = await github.rest.actions.createWorkflowDispatch({
               owner: context.payload.repository.owner.login,
               repo: context.payload.repository.name,
               workflow_id: 'ci.yml',
-              ref: 'main'
+              ref: branch
             })
