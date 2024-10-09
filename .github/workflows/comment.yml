@@ -10,6 +10,9 @@ jobs:
     # Only run on pull-request comments
     if: ${{ github.event.issue.pull_request && github.event.comment.body == '/build-pr-image' }}
 
+    permissions:
+      actions: write
+
     steps:
       - uses: actions/github-script@v7
         with:
