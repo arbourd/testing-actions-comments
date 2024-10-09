@@ -8,7 +8,7 @@ on:
       - completed
 
 jobs:
-  python-image:
+  image:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,7 +20,7 @@ jobs:
           # Set the ref to a pull-request reference if job triggered from workflow_run
           if [ "${{ github.event_name == 'workflow_run' }}" = "true" ]; then
             echo "Workflow Run"
-            echo ${{ fromJSON(github.event.workflow_run) }}
+            echo ${{ fromJSON(github.event).workflow_run }}
           fi
 
           echo $ref
