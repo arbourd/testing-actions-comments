@@ -7,15 +7,17 @@ on:
 jobs:
   trigger:
     runs-on: ubuntu-latest
+    # Only run on pull-request comments
     if: ${{ github.event.issue.pull_request && github.event.comment.body == '/build-pr-image' }}
-    outputs:
-      ref: ${{ steps.trigger.outputs.ref }}
 
     steps:
-      - name: Build comment /build-pr-image detected
-        id: trigger
+      - id: get-ref
         run: |
-          ref="refs/pull/${{ github.event.issue.number }}/head"
+          echo pr=${{ github.event.issue.number }} >> $GITHUB_OUTPUT
+          echo ref=ref/pulls/${{ github.event.issue.number }}/head >> $GITHUB_OUTPUT
 
-          echo "Trigger build job for refs/pull/${{ github.event.issue.number }}/head"
-          echo ref=$ref >> $GITHUB_OUTPUT
+      - name: Trigger CI workflow
+        uses: ./.github/workflows/ci.yml
+        with:
+          pr: ${{ steps.get-ref.outputs.pr }}
+          ref: ${{ steps.get-ref.outputs.ref }}
