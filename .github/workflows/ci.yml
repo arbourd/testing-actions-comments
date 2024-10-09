@@ -3,6 +3,10 @@ name: ci
 on:
   pull_request:
   workflow_dispatch:
+    inputs:
+      pr-number:
+        description: The number of the pull-request that dispatched the request
+        required: true
 
 jobs:
   image:
@@ -11,3 +15,4 @@ jobs:
     steps:
       - run: |
           echo "${{ github.ref }}"
+          echo "${{ inputs.pr-number }}"

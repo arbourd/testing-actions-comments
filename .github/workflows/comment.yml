@@ -17,19 +17,26 @@ jobs:
       - uses: actions/github-script@v7
         with:
           script: |
-            const prNumber = context.issue.number
+            // Get branch name by pull-request number
             const { data: pr } = await github.rest.pulls.get({
               owner: context.payload.repository.owner.login,
               repo: context.payload.repository.name,
-              pull_number: prNumber
-            });
-            branch = pr.head.ref
+              pull_number: context.issue.number
+            })
 
-            console.log(`Triggering a build for pull-request ${prNumber} on branch '${branch}'`)
-
-            const response = await github.rest.actions.createWorkflowDispatch({
+            // Trigger job
+            await github.rest.actions.createWorkflowDispatch({
               owner: context.payload.repository.owner.login,
               repo: context.payload.repository.name,
               workflow_id: 'ci.yml',
-              ref: branch
+              ref: pr.head.ref,
+              inputs: { pr-number: context.issue.number }
+            })
+
+            // Update comment indicating job has been dispatched
+            await github.reactions.createForIssueComment({
+              owner: context.payload.repository.owner.login,
+              repo: context.payload.repository.name,
+              comment_id: context.payload.comment.id,
+              content: rocket
             })
