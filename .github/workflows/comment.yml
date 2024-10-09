@@ -5,7 +5,7 @@ on:
     types: [created]
 
 jobs:
-  trigger-self:
+  trigger:
     # Only run on pull-request comments
     if: ${{ github.event.issue.pull_request && startsWith(github.event.comment.body, '/build-pr-image') }}
 
@@ -22,7 +22,7 @@ jobs:
               owner: context.payload.repository.owner.login,
               repo: context.payload.repository.name,
               pull_number: prNumber
-            });
+            })
             branch = pr.head.ref
 
             console.log(`Triggering a build for pull-request ${prNumber} on branch '${branch}'`)
