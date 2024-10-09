@@ -37,7 +37,7 @@ jobs:
             })
 
             // Update comment indicating job has been dispatched
-            await github.reactions.createForIssueComment({
+            await github.rest.reactions.createForIssueComment({
               owner: context.payload.repository.owner.login,
               repo: context.payload.repository.name,
               comment_id: context.payload.comment.id,
