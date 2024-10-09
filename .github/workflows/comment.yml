@@ -16,11 +16,12 @@ jobs:
           script: |
             console.log(context)
             console.log(context.payload.repository.owner)
+            console.log(github.actions)
 
             const prNumber = context.issue.number
             const ref = `refs/pull/${prNumber}/merge`
 
-            const response = await octokit.rest.actions.createWorkflowDispatch({
+            const response = await github.actions.createWorkflowDispatch({
               owner: context.payload.repository.owner.login,
               repo: context.payload.repository.name,
               workflow_id: 'ci.yml',
