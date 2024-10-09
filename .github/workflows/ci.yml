@@ -4,8 +4,9 @@ on:
   pull_request:
   workflow_dispatch:
     inputs:
-      pr-number:
+      pull_number:
         description: The number of the pull-request that dispatched the request
+        type: number
         required: true
 
 jobs:
@@ -15,4 +16,4 @@ jobs:
     steps:
       - run: |
           echo "${{ github.ref }}"
-          echo "${{ inputs.pr-number }}"
+          echo "${{ inputs.pull_number }}"
