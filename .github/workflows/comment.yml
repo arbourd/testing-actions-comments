@@ -15,14 +15,14 @@ jobs:
         with:
           script: |
             console.log(context)
-            console.log(context.repository.owner)
+            console.log(context.payload.repository.owner)
 
             const prNumber = context.issue.number
             const ref = `refs/pull/${prNumber}/merge`
 
-            // const response = await github.actions.createWorkflowDispatch({
-            //   owner: 'your-username',
-            //   repo: context.repository.name,
-            //   workflow_id: 'ci.yml',
-            //   ref: 'main'
-            // })
+            const response = await github.actions.createWorkflowDispatch({
+              owner: context.repository.owner.login,
+              repo: context.repository.name,
+              workflow_id: 'ci.yml',
+              ref: 'main'
+            })

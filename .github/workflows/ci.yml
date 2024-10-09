@@ -3,13 +3,6 @@ name: ci
 on:
   pull_request:
   workflow_dispatch:
-    inputs:
-      pr:
-        required: true
-        type: number
-      ref:
-        required: true
-        type: string
 
 jobs:
   image:
@@ -18,7 +11,3 @@ jobs:
     steps:
       - run: |
           echo "${{ github.ref }}"
-
-      - run: |
-          echo "${{ inputs.pr }}"
-          echo "${{ inputs.ref }}"
