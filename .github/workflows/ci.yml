@@ -1,0 +1,27 @@
+name: ci
+
+on:
+  workflow_run:
+    workflows:
+      - pr-build
+    types:
+      - completed
+
+jobs:
+  python-image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get GitHub ref
+        id: get-ref
+        run: |
+          ref="${{ github.ref }}"
+
+          # Set the ref to a pull-request reference if job triggered from workflow_run
+          if [ "${{ github.event_name == 'workflow_run' }}" = "true" ]; then
+            echo "Workflow Run"
+            echo ${{ github.event.workflow_run }}
+          fi
+
+          echo $ref
+          echo ref=$ref >> $GITHUB_OUTPUT
