@@ -12,8 +12,33 @@ on:
 jobs:
   image:
     runs-on: ubuntu-latest
+    permissions:
+      statuses: write
+
+    strategy:
+      matrix:
+        example:
+          - one
+          - two
+          - three
 
     steps:
       - run: |
           echo "${{ github.ref }}"
           echo "${{ inputs.pull_number }}"
+
+
+      - if: always() && github.event_name == 'workflow_dispatch'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Trigger job
+
+            await github.rest.repos.createCommitStatus({
+              owner: context.payload.repository.owner.login,
+              repo: context.payload.repository.name,
+              sha: context.sha,
+              context: 'ci / pr-image (${{ matrix.example }})',
+              state: ${{ job.status }},
+              target_url: `${context.payload.repository.html_url}/actions/runs/${context.runId}`
+            });
